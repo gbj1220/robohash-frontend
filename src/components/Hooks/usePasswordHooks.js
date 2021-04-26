@@ -5,6 +5,7 @@ function usePasswordHooks() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [isPasswordOnBlur, setIsPasswordOnBlur] = useState(false);
 
   function passwordOnChange(e) {
     let passwordValue = e.target.value;
@@ -21,7 +22,19 @@ function usePasswordHooks() {
       );
     }
   }
-  return [password, passwordOnChange, passwordError, passwordErrorMessage];
+
+  function handleBlurOnChange() {
+    setIsPasswordOnBlur(true);
+  }
+
+  return [
+    password,
+    passwordOnChange,
+    passwordError,
+    passwordErrorMessage,
+    isPasswordOnBlur,
+    handleBlurOnChange,
+  ];
 }
 
 export default usePasswordHooks;

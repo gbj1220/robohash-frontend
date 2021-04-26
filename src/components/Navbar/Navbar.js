@@ -31,7 +31,7 @@ export default function ButtonAppBar() {
           <Button color='inherit' href='sign-up'>
             Sign Up
           </Button>
-          <Button color='inherit' href='/sign-in'>
+          <Button color='inherit' href='/login'>
             Login
           </Button>
         </Toolbar>
