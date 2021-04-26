@@ -140,14 +140,14 @@ export default function SignUp() {
               <FormControl error={emailInputError}>
                 <TextField
                   name='email'
-                  variant='outlined'
                   value={email}
                   onChange={(e) => setEmail(e)}
+                  variant='outlined'
                   required
                   fullWidth
                   id='email'
-                  type='email'
                   label='Email Address'
+                  type='email'
                   autoComplete='email'
                   autoFocus
                 />
@@ -159,14 +159,16 @@ export default function SignUp() {
             <Grid item xs={12}>
               <FormControl error={passwordInputError}>
                 <TextField
+                  name='Password'
+                  value={password}
+                  onChange={(e) => setPassword(e)}
                   variant='outlined'
                   required
                   fullWidth
-                  name='Password'
+                  id='password'
                   label='Password'
                   type='password'
-                  id='password'
-                  autoComplete='current-password'
+                  autoComplete='password'
                   autoFocus
                 />
                 <FormHelperText>
