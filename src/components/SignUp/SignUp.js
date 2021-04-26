@@ -4,6 +4,8 @@ import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
@@ -97,58 +99,80 @@ export default function SignUp() {
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete='fname'
-                name='firstName'
-                value={firstName}
-                onChange={(e) => setFirstName(e)}
-                variant='outlined'
-                required
-                fullWidth
-                id='firstName'
-                label='First Name'
-                autoFocus
-              />
+              <FormControl error={firstNameInputError}>
+                <TextField
+                  name='First Name'
+                  value={firstName}
+                  onChange={(e) => setFirstName(e)}
+                  variant='outlined'
+                  required
+                  fullWidth
+                  id='firstName'
+                  label='First Name'
+                  autoComplete='fname'
+                  autoFocus
+                />
+                <FormHelperText>
+                  {firstNameInputError && firstNameInputErrorMessage}
+                </FormHelperText>
+              </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                variant='outlined'
-                required
-                fullWidth
-                id='lastName'
-                label='Last Name'
-                name='lastName'
-                autoComplete='lname'
-              />
+              <FormControl error={lastNameInputError}>
+                <TextField
+                  name='Last Name'
+                  value={lastName}
+                  onChange={(e) => setLastName(e)}
+                  variant='outlined'
+                  required
+                  fullWidth
+                  id='lastName'
+                  label='Last Name'
+                  autoComplete='lname'
+                  autoFocus
+                />
+                <FormHelperText>
+                  {lastNameInputError && lastNameInputErrorMessage}
+                </FormHelperText>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                variant='outlined'
-                required
-                fullWidth
-                id='email'
-                label='Email Address'
-                name='email'
-                autoComplete='email'
-              />
+              <FormControl error={emailInputError}>
+                <TextField
+                  name='email'
+                  variant='outlined'
+                  value={email}
+                  onChange={(e) => setEmail(e)}
+                  required
+                  fullWidth
+                  id='email'
+                  type='email'
+                  label='Email Address'
+                  autoComplete='email'
+                  autoFocus
+                />
+                <FormHelperText>
+                  {emailInputError && emailInputErrorMessage}
+                </FormHelperText>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                variant='outlined'
-                required
-                fullWidth
-                name='password'
-                label='Password'
-                type='password'
-                id='password'
-                autoComplete='current-password'
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value='allowExtraEmails' color='primary' />}
-                label='I want to receive inspiration, marketing promotions and updates via email.'
-              />
+              <FormControl error={passwordInputError}>
+                <TextField
+                  variant='outlined'
+                  required
+                  fullWidth
+                  name='Password'
+                  label='Password'
+                  type='password'
+                  id='password'
+                  autoComplete='current-password'
+                  autoFocus
+                />
+                <FormHelperText>
+                  {passwordInputError && passwordInputErrorMessage}
+                </FormHelperText>
+              </FormControl>
             </Grid>
           </Grid>
           <Button
