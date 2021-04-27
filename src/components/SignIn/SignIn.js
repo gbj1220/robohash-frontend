@@ -3,27 +3,15 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {"Copyright © "}
-      <Link color='inherit' href='https://material-ui.com/'>
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import axios from "axios";
+import usePasswordHooks from "../Hooks/usePasswordHooks";
+import useEmailHooks from "../Hooks/useEmailHooks";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,8 +46,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInSide() {
+export default function SignIn() {
   const classes = useStyles();
+
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      let result = await axios.post("http://localhost:3001/users/login", {
+        // email,
+        // password,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <Grid container component='main' className={classes.root}>
@@ -71,7 +71,7 @@ export default function SignInSide() {
           <Typography component='h1' variant='h5'>
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
             <TextField
               variant='outlined'
               margin='normal'
@@ -115,9 +115,7 @@ export default function SignInSide() {
                 </Link>
               </Grid>
             </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
+            <Box mt={5}></Box>
           </form>
         </div>
       </Grid>

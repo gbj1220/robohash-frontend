@@ -1,12 +1,9 @@
 import React from "react";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -16,6 +13,7 @@ import Container from "@material-ui/core/Container";
 import useInputHooks from "../Hooks/useInputHooks";
 import useEmailHooks from "../Hooks/useEmailHooks";
 import usePasswordHooks from "../Hooks/usePasswordHooks";
+import axios from "axios";
 
 function Copyright() {
   return (
@@ -42,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -50,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+function SignUp() {
   const [
     firstName,
     setFirstName,
@@ -70,8 +68,6 @@ export default function SignUp() {
     setEmail,
     emailInputError,
     emailInputErrorMessage,
-    isEmailOnBlur,
-    handleEmailOnBlur,
   ] = useEmailHooks();
 
   const [
@@ -79,12 +75,22 @@ export default function SignUp() {
     setPassword,
     passwordInputError,
     passwordInputErrorMessage,
-    isPasswordOnBlur,
-    handlePasswordOnBlur,
   ] = usePasswordHooks();
 
-  function handleOnSubmit(e) {
+  async function handleOnSubmit(e) {
     e.preventDefault();
+
+    try {
+      let result = await axios.post("http://localhost:3001/users/sign-up", {
+        firstName,
+        lastName,
+        email,
+        password,
+      });
+      console.log(result);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   const classes = useStyles();
@@ -96,7 +102,12 @@ export default function SignUp() {
         <Typography component='h1' variant='h5'>
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form
+          className={classes.form}
+          noValidate
+          onSubmit={handleOnSubmit}
+          href='/login'
+        >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <FormControl error={firstNameInputError}>
@@ -201,3 +212,5 @@ export default function SignUp() {
     </Container>
   );
 }
+
+export default SignUp;
