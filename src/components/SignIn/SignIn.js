@@ -1,8 +1,9 @@
 import React from "react";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
@@ -12,6 +13,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import usePasswordHooks from "../Hooks/usePasswordHooks";
 import useEmailHooks from "../Hooks/useEmailHooks";
+import jwtDecode from "jwt-decode";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,17 +52,36 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
   const classes = useStyles();
 
-  const handleOnSubmit = async (e) => {
+  const [email, setEmail, user, setUser] = useEmailHooks();
+
+  const [password, setPassword] = usePasswordHooks();
+
+  async function handleOnSubmit(e) {
     e.preventDefault();
+    console.log(email);
+    console.log(password);
     try {
       let result = await axios.post("http://localhost:3001/users/login", {
-        // email,
-        // password,
+        email,
+        password,
       });
+
+      localStorage.setItem("jwtToken", result.data.jwtToken);
+
+      const decodedToken = jwtDecode(result.data.jwtToken);
+      console.log(decodedToken);
     } catch (e) {
-      console.log(e);
+      toast.error(e.response.data, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
-  };
+  }
 
   return (
     <Grid container component='main' className={classes.root}>
@@ -67,28 +89,31 @@ export default function SignIn() {
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
-          <Avatar className={classes.avatar}></Avatar>
           <Typography component='h1' variant='h5'>
             Sign in
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
             <TextField
+              name='email'
+              value={email}
+              onChange={(e) => setEmail(e)}
               variant='outlined'
               margin='normal'
               required
               fullWidth
               id='email'
               label='Email Address'
-              name='email'
               autoComplete='email'
               autoFocus
             />
             <TextField
+              name='password'
+              value={password}
+              onChange={(e) => setPassword(e)}
               variant='outlined'
               margin='normal'
               required
               fullWidth
-              name='password'
               label='Password'
               type='password'
               id='password'
