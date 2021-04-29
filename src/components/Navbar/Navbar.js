@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -18,24 +19,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar() {
+function Navbar(props) {
   const classes = useStyles();
+
+  const authContext = useContext(AuthContext);
+
+  console.log(authContext.state.user);
 
   return (
     <div className={classes.root}>
       <AppBar position='static'>
         <Toolbar>
           <Typography variant='h6' className={classes.title}>
-            ROBOHASH
+            <Button style={{ color: "white" }} href='home'>
+              ROBOHASH
+            </Button>
           </Typography>
-          <Button color='inherit' href='sign-up'>
-            Sign Up
+
+          <Button color='inherit'>
+            {authContext.state.user ? authContext.state.user.email : "Sign Up"}
           </Button>
-          <Button color='inherit' href='/login'>
-            Login
+
+          <Button color='inherit'>
+            {authContext.state.user ? "LOGOUT" : "LOGIN"}
           </Button>
         </Toolbar>
       </AppBar>
     </div>
   );
 }
+
+export default Navbar;

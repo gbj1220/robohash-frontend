@@ -23,18 +23,7 @@ function usePasswordHooks() {
     }
   }
 
-  function handleBlurOnChange() {
-    setIsPasswordOnBlur(true);
-  }
-
-  return [
-    password,
-    passwordOnChange,
-    passwordError,
-    passwordErrorMessage,
-    isPasswordOnBlur,
-    handleBlurOnChange,
-  ];
+  return [password, passwordOnChange, passwordError, passwordErrorMessage];
 }
 
 export default usePasswordHooks;

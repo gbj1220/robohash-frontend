@@ -10,7 +10,6 @@ function useInputHooks() {
     let inputValue = e.target.value;
     let inputName = e.target.name;
     setInput(inputValue);
-    console.log(inputValue);
 
     let checkInputNameWithRegEx;
     let errMessage;

@@ -13,7 +13,7 @@ function MainRouter() {
       <Switch>
         <Route path='/login' component={Login} />
         <Route path='/sign-up' component={SignUp} />
-        <Route path='/' component={Home} />
+        <Route path='/home' component={Home} />
       </Switch>
     </>
   );

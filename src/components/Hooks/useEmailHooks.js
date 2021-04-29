@@ -5,7 +5,6 @@ function useEmailHooks() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isEmailOnBlur, setIsEmailOnBlur] = useState(false);
 
   function handleEmail(e) {
     let emailValue = e.target.value;
@@ -20,19 +19,7 @@ function useEmailHooks() {
     }
   }
 
-  function handleEmailOnBlur() {
-    setIsEmailOnBlur(true);
-    console.log("onblur");
-  }
-
-  return [
-    email,
-    handleEmail,
-    emailError,
-    errorMessage,
-    isEmailOnBlur,
-    handleEmailOnBlur,
-  ];
+  return [email, handleEmail, emailError, errorMessage];
 }
 
 export default useEmailHooks;

@@ -2,10 +2,14 @@ import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import { deepPurple } from "@material-ui/core/colors";
 import { BrowserRouter as Router } from "react-router-dom";
+import UseAuthentication from "./components/Hooks/useAuthentication";
 
 import Spinner from "./components/Spinner/Spinner";
 import MainRouter from "./MainRouter";
 import React from "react";
+import AuthContextComponent, {
+  AuthContext,
+} from "./components/context/AuthContext";
 
 const theme = createMuiTheme({
   palette: {
@@ -29,7 +33,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <React.Suspense fallback={<Spinner />}>
         <Router>
-          <MainRouter />
+          <AuthContextComponent>
+            <MainRouter />
+          </AuthContextComponent>
         </Router>
       </React.Suspense>
     </ThemeProvider>

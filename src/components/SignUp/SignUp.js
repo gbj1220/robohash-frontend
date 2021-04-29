@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -14,6 +14,7 @@ import useInputHooks from "../Hooks/useInputHooks";
 import useEmailHooks from "../Hooks/useEmailHooks";
 import usePasswordHooks from "../Hooks/usePasswordHooks";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 
 function Copyright() {
   return (
@@ -87,7 +88,6 @@ function SignUp() {
         email,
         password,
       });
-      console.log(result);
     } catch (e) {
       console.log(e);
     }

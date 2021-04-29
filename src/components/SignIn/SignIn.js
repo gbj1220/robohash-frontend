@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -14,7 +14,8 @@ import axios from "axios";
 import usePasswordHooks from "../Hooks/usePasswordHooks";
 import useEmailHooks from "../Hooks/useEmailHooks";
 import jwtDecode from "jwt-decode";
-import { toast } from "react-toastify";
+import { AuthContext } from "../context/AuthContext";
+import useAuthenticationHooks from "../Hooks/useAuthentication";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,17 +50,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+const SignIn = (props) => {
   const classes = useStyles();
 
-  const [email, setEmail, user, setUser] = useEmailHooks();
+  const [email, setEmail, emailError, emailErrorMessage] = useEmailHooks();
 
-  const [password, setPassword] = usePasswordHooks();
+  const [checkToken] = useAuthenticationHooks();
+
+  const authContext = useContext(AuthContext);
+
+  const [
+    password,
+    setPassword,
+    passwordError,
+    passwordErrorMessage,
+  ] = usePasswordHooks();
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   async function handleOnSubmit(e) {
     e.preventDefault();
-    console.log(email);
-    console.log(password);
     try {
       let result = await axios.post("http://localhost:3001/users/login", {
         email,
@@ -69,19 +79,22 @@ export default function SignIn() {
       localStorage.setItem("jwtToken", result.data.jwtToken);
 
       const decodedToken = jwtDecode(result.data.jwtToken);
-      console.log(decodedToken);
+      authContext.dispatch({ type: "LOGIN", user: decodedToken.email });
     } catch (e) {
-      toast.error(e.response.data, {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      console.log(e);
     }
   }
+
+  useEffect(() => {
+    let token = checkToken();
+    if (token) {
+      authContext.dispatch({ type: "LOGIN", user: token.email });
+      props.history.push("/home");
+    } else {
+      props.history.push("/login");
+    }
+    console.log(token);
+  }, []);
 
   return (
     <Grid container component='main' className={classes.root}>
@@ -93,57 +106,62 @@ export default function SignIn() {
             Sign in
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
-            <TextField
-              name='email'
-              value={email}
-              onChange={(e) => setEmail(e)}
-              variant='outlined'
-              margin='normal'
-              required
-              fullWidth
-              id='email'
-              label='Email Address'
-              autoComplete='email'
-              autoFocus
-            />
-            <TextField
-              name='password'
-              value={password}
-              onChange={(e) => setPassword(e)}
-              variant='outlined'
-              margin='normal'
-              required
-              fullWidth
-              label='Password'
-              type='password'
-              id='password'
-              autoComplete='current-password'
-            />
+            <FormControl error={emailError}>
+              <TextField
+                name='email'
+                value={email}
+                onChange={(e) => setEmail(e)}
+                variant='outlined'
+                margin='normal'
+                required
+                fullWidth
+                id='email'
+                label='Email Address'
+                autoComplete='email'
+                autoFocus
+              />
+              <FormHelperText>{emailError && emailErrorMessage}</FormHelperText>
+            </FormControl>
+            <FormControl error={passwordError}>
+              <TextField
+                name='password'
+                value={password}
+                onChange={(e) => setPassword(e)}
+                variant='outlined'
+                margin='normal'
+                required
+                fullWidth
+                label='Password'
+                type='password'
+                id='password'
+                autoComplete='current-password'
+              />
+              <FormHelperText>
+                {passwordError && passwordErrorMessage}
+              </FormHelperText>
+            </FormControl>
             <Button
               type='submit'
               fullWidth
               variant='contained'
               color='primary'
               className={classes.submit}
+              // disabled={isButtonDisabled}
             >
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Link href='#' variant='body2'>
-                  Forgot password?
-                </Link>
-              </Grid>
               <Grid item>
                 <Link href='/sign-up' variant='body2'>
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
-            <Box mt={5}></Box>
           </form>
         </div>
       </Grid>
     </Grid>
   );
-}
+};
+
+export default SignIn;
