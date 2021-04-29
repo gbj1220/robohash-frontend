@@ -24,8 +24,6 @@ function Navbar(props) {
 
   const authContext = useContext(AuthContext);
 
-  console.log(authContext.state.user);
-
   return (
     <div className={classes.root}>
       <AppBar position='static'>

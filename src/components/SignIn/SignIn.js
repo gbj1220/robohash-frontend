@@ -80,16 +80,17 @@ const SignIn = (props) => {
 
       const decodedToken = jwtDecode(result.data.jwtToken);
       authContext.dispatch({ type: "LOGIN", user: decodedToken.email });
+
+      props.history.push("/auth-home");
     } catch (e) {
       console.log(e);
     }
   }
-
   useEffect(() => {
     let token = checkToken();
     if (token) {
       authContext.dispatch({ type: "LOGIN", user: token.email });
-      props.history.push("/home");
+      props.history.push("/auth-home");
     } else {
       props.history.push("/login");
     }
