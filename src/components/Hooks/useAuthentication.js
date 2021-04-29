@@ -1,20 +1,16 @@
+import { useState, useContext } from "react";
 import jwtDecode from "jwt-decode";
-
 const useAuthenticationHooks = () => {
-  const getLocalStorageJWT = () => {
+  function getLocalStorageJWT() {
     return localStorage.getItem("jwtToken");
-    console.log(getLocalStorageJWT);
-  };
-
-  const setLocalStorageJWT = () => {
+  }
+  function setLocalStorageJWT(jwtToken) {
     return localStorage.setItem("jwtToken", jwtToken);
-  };
-
-  const removeToken = () => {
+  }
+  function removeToken() {
     localStorage.removeItem("usersToken");
-  };
-
-  const checkToken = () => {
+  }
+  function checkToken() {
     let token = getLocalStorageJWT();
     if (token) {
       let decodedToken = jwtDecode(token);
@@ -24,12 +20,12 @@ const useAuthenticationHooks = () => {
         return false;
       } else {
         setLocalStorageJWT(token);
-        return decodedToken;
+        return true;
       }
     } else {
       return false;
     }
-  };
+  }
   return [checkToken];
 };
-export default { useAuthenticationHooks };
+export default useAuthenticationHooks;
