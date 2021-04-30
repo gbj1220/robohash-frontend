@@ -1,4 +1,3 @@
-import { useState, useContext } from "react";
 import jwtDecode from "jwt-decode";
 const useAuthenticationHooks = () => {
   function getLocalStorageJWT() {
@@ -12,6 +11,7 @@ const useAuthenticationHooks = () => {
   }
   function checkToken() {
     let token = getLocalStorageJWT();
+
     if (token) {
       let decodedToken = jwtDecode(token);
       const currentTime = Date.now() / 1000;
@@ -26,6 +26,6 @@ const useAuthenticationHooks = () => {
       return false;
     }
   }
-  return [checkToken];
+  return [checkToken, removeToken];
 };
 export default useAuthenticationHooks;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -6,7 +6,6 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -66,7 +65,7 @@ const SignIn = (props) => {
     passwordErrorMessage,
   ] = usePasswordHooks();
 
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  // const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   async function handleOnSubmit(e) {
     e.preventDefault();
@@ -80,12 +79,12 @@ const SignIn = (props) => {
 
       const decodedToken = jwtDecode(result.data.jwtToken);
       authContext.dispatch({ type: "LOGIN", user: decodedToken.email });
-
       props.history.push("/auth-home");
     } catch (e) {
       console.log(e);
     }
   }
+
   useEffect(() => {
     let token = checkToken();
     if (token) {
@@ -94,7 +93,6 @@ const SignIn = (props) => {
     } else {
       props.history.push("/login");
     }
-    console.log(token);
   }, []);
 
   return (

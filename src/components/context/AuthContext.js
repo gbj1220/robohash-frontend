@@ -16,7 +16,6 @@ const reducer = (state, action) => {
           email: action.user,
         },
       };
-      console.log(action);
 
     case "LOGOUT":
       return {

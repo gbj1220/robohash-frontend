@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -14,6 +13,8 @@ import useInputHooks from "../Hooks/useInputHooks";
 import useEmailHooks from "../Hooks/useEmailHooks";
 import usePasswordHooks from "../Hooks/usePasswordHooks";
 import axios from "axios";
+import React, { useEffect, useContext } from "react";
+import checkToken from "../Hooks/useAuthentication";
 import { AuthContext } from "../context/AuthContext";
 
 function Copyright() {
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SignUp() {
+function SignUp(props) {
   const [
     firstName,
     setFirstName,
@@ -78,6 +79,8 @@ function SignUp() {
     passwordInputErrorMessage,
   ] = usePasswordHooks();
 
+  const authContext = useContext(AuthContext);
+
   async function handleOnSubmit(e) {
     e.preventDefault();
 
@@ -88,10 +91,22 @@ function SignUp() {
         email,
         password,
       });
+
+      let token = checkToken();
+      if (token) {
+        authContext.dispatch({ type: "LOGIN", user: token.email });
+      }
     } catch (e) {
       console.log(e);
     }
   }
+
+  useEffect(() => {
+    let token = checkToken();
+    if (token) {
+      props.history.push("/auth-home");
+    }
+  }, []);
 
   const classes = useStyles();
 
@@ -102,12 +117,7 @@ function SignUp() {
         <Typography component='h1' variant='h5'>
           Sign up
         </Typography>
-        <form
-          className={classes.form}
-          noValidate
-          onSubmit={handleOnSubmit}
-          href='/login'
-        >
+        <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <FormControl error={firstNameInputError}>

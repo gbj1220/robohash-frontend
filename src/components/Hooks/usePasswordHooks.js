@@ -5,7 +5,6 @@ function usePasswordHooks() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
-  const [isPasswordOnBlur, setIsPasswordOnBlur] = useState(false);
 
   function passwordOnChange(e) {
     let passwordValue = e.target.value;
