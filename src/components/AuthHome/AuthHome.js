@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import useAuthenticationHooks from "../Hooks/useAuthentication";
 import { AuthContext } from "../context/AuthContext";
 import { makeStyles } from "@material-ui/core/styles";
@@ -7,57 +7,39 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import axios from "axios";
 
-const useStyles = makeStyles({
-  root: {
-    minWidth: 275,
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-});
+require("dotenv").config();
 
 function AuthHome(props) {
-  var axios = require("axios").default;
+  const [searchValue, setSearchValue] = useState("");
+  const [apiResponse, setApiResponse] = useState("");
 
-  const CallApi = async () => {
-    var options = {
-      method: "GET",
-      url: "https://robohash.p.rapidapi.com/index.php",
-      params: { text: "kawasaki" },
-      headers: {
-        "x-rapidapi-key": "5f2310c1a5mshfe87a4d13294ae6p1224cbjsn998d0ac7748c",
-        "x-rapidapi-host": "robohash.p.rapidapi.com",
-      },
-    };
-
-    axios
-      .request(options)
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+  const callApi = async () => {
+    try {
+      const fetchData = await axios.get(
+        `https://robohash.p.rapidapi.com/index.php?text=${searchValue}`,
+        {
+          headers: {
+            "x-rapidapi-key": "",
+            "x-rapidapi-host": "robohash.p.rapidapi.com",
+          },
+        }
+      );
+      setApiResponse(fetchData);
+      console.log(apiResponse);
+      return apiResponse;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
   const [checkToken] = useAuthenticationHooks();
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
     let token = checkToken();
     if (token) {
-      CallApi();
       authContext.dispatch({ type: "LOGIN", user: token.email });
       props.history.push("/auth-home");
     } else {
@@ -65,7 +47,36 @@ function AuthHome(props) {
     }
   }, []);
 
-  return <></>;
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  const handleOnChange = (e) => {
+    setSearchValue(e.target.value);
+    console.log(searchValue);
+  };
+
+  return (
+    <div className='input-group mb-3' style={{ marginLeft: "500px" }}>
+      <form className='main-form' onSubmit={handleOnSubmit}>
+        <img src={apiResponse} />
+        <input
+          type='text'
+          className='form-control'
+          placeholder='Create a robot'
+          aria-label='robot-creation-input'
+          onChange={(e) => handleOnChange(e)}
+        />
+        <button
+          type='button'
+          className='btn btn-info'
+          onClick={() => callApi()}
+        >
+          Get Robot
+        </button>
+      </form>
+    </div>
+  );
 }
 
 export default AuthHome;

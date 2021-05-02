@@ -23,9 +23,8 @@ function Copyright() {
       {"Copyright © "}
       <Link color='inherit' href='https://material-ui.com/'>
         Your Website
-      </Link>{" "}
+      </Link>
       {new Date().getFullYear()}
-      {"."}
     </Typography>
   );
 }
@@ -103,8 +102,11 @@ function SignUp(props) {
 
   useEffect(() => {
     let token = checkToken();
-    if (token) {
+    if (!token) {
       props.history.push("/auth-home");
+      console.log(token);
+    } else {
+      props.history.push("/sign-up");
     }
   }, []);
 

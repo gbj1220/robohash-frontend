@@ -50,13 +50,13 @@ function Navbar(props) {
           {authContext.state.isAuth ? (
             <>
               <NavLink
-                to='/profile'
+                to='/friends-list'
                 exact
                 className='nav-link'
                 activeClassName='active-nav-link'
                 style={{ color: "white" }}
               >
-                <Button color='inherit'>Profile</Button>
+                <Button color='inherit'>Friends</Button>
               </NavLink>
               <NavLink
                 to='login'
