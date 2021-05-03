@@ -10,18 +10,17 @@ import jwtDecode from "jwt-decode";
 const FriendsList = (props) => {
   const authContext = useContext(AuthContext);
 
-  const [friendsArray, setFriendsArray] = useState("");
+  const [friendsArray, setFriendsArray] = useState([]);
 
   const [firstName, setFirstName] = useInputHooks();
   const [lastName, setLastName] = useInputHooks();
   const [email, setEmail] = useEmailHooks();
   const [checkToken] = useAuthenticationHooks();
 
-  useEffect(() => {
+  useEffect(async () => {
     let token = checkToken();
     if (token) {
       authContext.dispatch({ type: "LOGIN", user: token.email });
-      props.history.push("/friends-list");
     } else {
       props.history.push("/login");
     }
@@ -29,9 +28,12 @@ const FriendsList = (props) => {
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
+    addFriend();
+    getFriendsList();
+  };
 
+  const addFriend = async () => {
     const jwtToken = localStorage.getItem("jwtToken");
-
     try {
       const payload = await axios.post(
         "http://localhost:3001/friends/create-friend",
@@ -46,23 +48,18 @@ const FriendsList = (props) => {
           },
         }
       );
-      const newFriendsArray = [...friendsArray, payload.data.friends];
-      setFriendsArray(newFriendsArray);
+      console.log(payload.data);
     } catch (e) {
       console.log(e);
     }
   };
 
-  const displayFriendsList = async () => {
+  const getFriendsList = async () => {
     try {
-      let jwtToken = localStorage.getItem("jwtToken");
-
-      let getList = axios.get("http://localhost3001/friends/get-friends-list", {
-        headers: {
-          authorization: `Bearer ${jwtToken}`,
-        },
-      });
-      console.log(getList);
+      let getFriendArray = await axios.get(
+        "http://localhost:3001/friends/get-friends-list"
+      );
+      setFriendsArray(getFriendArray);
     } catch (e) {
       console.log(e);
     }
@@ -94,9 +91,22 @@ const FriendsList = (props) => {
             onChange={(e) => setEmail(e)}
           />
           <div>
+            <div>
+              <img src='' />
+            </div>
             <button className='btn btn-info' type='submit'>
-              Add Friend
+              Submit
             </button>
+            <div className='card text-center' style={{ width: "18rem" }}>
+              <div className='card-body'>
+                <h5 className='card-title'>Contact</h5>
+                <p className='card-text'>
+                  {friendsArray.map((item, index) => {
+                    console.log(item);
+                  })}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </form>

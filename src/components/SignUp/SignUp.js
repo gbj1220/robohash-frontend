@@ -104,7 +104,6 @@ function SignUp(props) {
     let token = checkToken();
     if (!token) {
       props.history.push("/auth-home");
-      console.log(token);
     } else {
       props.history.push("/sign-up");
     }

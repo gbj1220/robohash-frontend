@@ -8,36 +8,35 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
-
 require("dotenv").config();
 
 function AuthHome(props) {
   const [searchValue, setSearchValue] = useState("");
   const [apiResponse, setApiResponse] = useState("");
 
-  const callApi = async () => {
-    try {
-      const fetchData = await axios.get(
-        `https://robohash.p.rapidapi.com/index.php?text=${searchValue}`,
-        {
-          headers: {
-            "x-rapidapi-key": "",
-            "x-rapidapi-host": "robohash.p.rapidapi.com",
-          },
-        }
-      );
-      setApiResponse(fetchData);
-      console.log(apiResponse);
-      return apiResponse;
-    } catch (e) {
-      console.log(e);
-    }
+  const callApi = () => {
+    var options = {
+      method: "GET",
+      url: "https://cat-fact.herokuapp.com/facts/random",
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        setApiResponse(response.data.text);
+        return apiResponse;
+      })
+
+      .catch(function (error) {
+        console.error(error);
+      });
   };
 
   const [checkToken] = useAuthenticationHooks();
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
+    callApi();
     let token = checkToken();
     if (token) {
       authContext.dispatch({ type: "LOGIN", user: token.email });
@@ -53,29 +52,38 @@ function AuthHome(props) {
 
   const handleOnChange = (e) => {
     setSearchValue(e.target.value);
-    console.log(searchValue);
   };
 
   return (
-    <div className='input-group mb-3' style={{ marginLeft: "500px" }}>
-      <form className='main-form' onSubmit={handleOnSubmit}>
-        <img src={apiResponse} />
-        <input
-          type='text'
-          className='form-control'
-          placeholder='Create a robot'
-          aria-label='robot-creation-input'
-          onChange={(e) => handleOnChange(e)}
-        />
-        <button
-          type='button'
-          className='btn btn-info'
-          onClick={() => callApi()}
-        >
-          Get Robot
-        </button>
-      </form>
-    </div>
+    <>
+      <div
+        className='input-group mb-3'
+        style={{
+          justifyContent: "center",
+          marginTop: "50px",
+        }}
+      >
+        <form className='main-form' onSubmit={handleOnSubmit}>
+          <div
+            className='card text-center'
+            style={{ width: "40rem", height: "20rem", border: "none" }}
+          >
+            <div className='card-body' style={{ border: "none" }}>
+              <h5 className='card-title'>Cat Fact</h5>
+              <p className='card-text'>{apiResponse}</p>
+              <button
+                type='button'
+                className='btn btn-info'
+                onClick={() => callApi()}
+                style={{ alignItems: "center", marginTop: "150px" }}
+              >
+                Get Fact
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </>
   );
 }
 
